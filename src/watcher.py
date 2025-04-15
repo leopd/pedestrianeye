@@ -16,6 +16,9 @@ def display_loop(grabber: framegrab.FrameGrabber) -> None:
     print("Displaying camera feed...")
     print("Press 'q' to quit")
 
+    cnt = 0
+    start_time = time.time()
+
     while True:
         frame = grabber.grab()
         if frame is None:
@@ -26,6 +29,13 @@ def display_loop(grabber: framegrab.FrameGrabber) -> None:
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
+        cnt += 1
+        if cnt % 100 == 0:
+            fps = cnt / (time.time() - start_time)
+            print(f"FPS: {fps:.1f}")
+            cnt = 0
+            start_time = time.time()
 
 def main(config_file: str = "camera.yaml") -> None:
     """
