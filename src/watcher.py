@@ -2,6 +2,7 @@
 import argparse
 import sys
 from typing import Optional
+import time
 
 import cv2
 import framegrab
@@ -12,12 +13,12 @@ def display_loop(grabber: framegrab.FrameGrabber) -> None:
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
     cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
-    print(f"Displaying camera feed from config: {config_file}")
+    print("Displaying camera feed...")
     print("Press 'q' to quit")
 
     while True:
-        success, frame = grabber.grab_frame()
-        if not success:
+        frame = grabber.grab()
+        if frame is None:
             print("Failed to grab frame", file=sys.stderr)
             time.sleep(1)
             continue
@@ -33,14 +34,13 @@ def main(config_file: str = "camera.yaml") -> None:
     Args:
         config_file: Path to the camera configuration YAML file
     """
-    grabber = framegrab.FrameGrabber.from_yaml(config_file)
+    grabbers = framegrab.FrameGrabber.from_yaml(config_file)
+    grabber = grabbers[0]
 
     try:
         display_loop(grabber)
     except KeyboardInterrupt:
         print("Keyboard interrupt")
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
     finally:
         cv2.destroyAllWindows()
         grabber.release()
