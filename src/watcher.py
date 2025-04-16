@@ -31,11 +31,13 @@ def display_loop(grabber: framegrab.FrameGrabber) -> None:
             break
 
         cnt += 1
-        if cnt % 100 == 0:
-            fps = cnt / (time.time() - start_time)
-            print(f"FPS: {fps:.1f}")
+        elapsed = time.time() - start_time
+        if elapsed > 5:
+            fps = cnt / elapsed
+            print(f"FPS: {fps:.1f}.  Last frame resolution: {frame.shape}")
             cnt = 0
             start_time = time.time()
+
 
 def main(config_file: str = "camera.yaml") -> None:
     """

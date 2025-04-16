@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Pedestrian Eye
+Comment=A-pillar pedestrian detection system
+Exec=bash -c 'cd /home/leo/pedestrianeye && DISPLAY=:0 /home/leo/.local/bin/uv run src/watcher.py'
+Terminal=false
+X-GNOME-Autostart-enabled=true
